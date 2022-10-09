@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import './Register.scss';
-// import appFirebaseConfig from "../../../config/firebase";
+import "../../../config/firebase";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 const auth = getAuth();
 
