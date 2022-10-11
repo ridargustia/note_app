@@ -1,12 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { actionUserName } from "../../../config/redux/action";
 
 class Login extends Component{
+    changeUser = () => {
+        this.props.changeUserName();
+    }
+
     render(){
         return(
             <div>
-                <p>Halaman Login { this.props.isPopup }</p>
-                <button>Dashboard</button>
+                <p>Halaman Login { this.props.userName }</p>
+                <button onClick={this.changeUser}>Ubah Username</button>
                 <button>Register</button>
             </div>
         )
@@ -15,8 +20,16 @@ class Login extends Component{
 
 const mapStateToProps = state => {
     return {
-        isPopup: state.isPopup
+        isPopup: state.isPopup,
+        userName: state.user
     }
 }
 
-export default connect(mapStateToProps)(Login);
+//TODO menunggu 2 detik actionUserName() dijalankan
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeUserName: () => dispatch(actionUserName())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
