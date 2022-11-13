@@ -5,7 +5,7 @@ import App from './containers/pages/App';
 import reportWebVitals from './reportWebVitals';
 import appFirebaseConfig from './config/firebase';
 
-console.log('Config Firebase Test ==> ', appFirebaseConfig);
+// console.log('Config Firebase Test ==> ', appFirebaseConfig);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import './Register.scss';
 import "../../../config/firebase";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+// import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import Button from "../../../components/atoms/Button";
 import { connect } from "react-redux";
 import { registerUserAPI } from "../../../config/redux/action";
-const auth = getAuth();
+// const auth = getAuth();
 
 class Register extends Component{
     state = {
@@ -21,7 +21,7 @@ class Register extends Component{
         })
     }
 
-    handleRegisterSubmit = () => {
+    handleRegisterSubmit = async () => {
         // console.log('Email => ', this.state.email);
         // console.log('Password => ', this.state.password);
         const {email, password} = this.state;
@@ -34,7 +34,13 @@ class Register extends Component{
         //         isLoading: false
         //     });
         // }, 5000);
-        this.props.registerAPI({email, password});
+        const res = await this.props.registerAPI({email, password});
+        if (res) {
+            this.setState({
+                email: '',
+                password: ''
+            });
+        }
     }
 
     render(){
@@ -42,8 +48,8 @@ class Register extends Component{
             <div className="auth-container">
                 <div className="auth-card">
                     <p className="auth-title">Halaman Register</p>
-                    <input className="input" placeholder="Email" id="email" type="text" onChange={this.handleChangeText} />
-                    <input className="input" placeholder="Password" id="password" type="password" onChange={this.handleChangeText} />
+                    <input className="input" placeholder="Email" id="email" type="text" onChange={this.handleChangeText} value={this.state.email} />
+                    <input className="input" placeholder="Password" id="password" type="password" onChange={this.handleChangeText} value={this.state.password} />
                     <Button onClick={this.handleRegisterSubmit} title="Register" isLoading={this.props.isLoading} />
                 </div>
 
