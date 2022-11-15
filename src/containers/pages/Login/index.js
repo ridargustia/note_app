@@ -15,6 +15,7 @@ const Login = () => {
 
     const isLogin = useSelector((e) => e.isLogin);
     const isLoading = useSelector((e) => e.isLoading);
+    const user = useSelector((e) => e.user);
     // console.log('Status Login Before Login', isLogin);
     // console.log('Status Loading Before Login', isLoading);
     const dispatch = useDispatch();

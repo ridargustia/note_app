@@ -1,6 +1,9 @@
-import "../../../config/firebase";
+// import "../../../config/firebase";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { database } from "../../../config/firebase";
+import { getDatabase, ref, set, push } from "firebase/database";
 const auth = getAuth();
+const db = getDatabase();
 
 //TODO Cara menggunakan asynchronuous function (Implementasi Redux Thunk), Menunggu waktu 2 detik maka actionUserName dijalankan pada dispatch. Tanpa redux thunk fungsi async ini tidak berjalan
 export const actionUserName = () => (dispatch) => {
@@ -42,7 +45,8 @@ export const loginUserAPI = (data) => (dispatch) => {
             const dataUser = {
                 email: user.email,
                 uid: user.uid,
-                emailVerified: user.emailVerified
+                emailVerified: user.emailVerified,
+                refreshToken: user.refreshToken
             }
 
             dispatch({type: 'CHANGE_LOADING', value: false});
@@ -60,4 +64,12 @@ export const loginUserAPI = (data) => (dispatch) => {
         })
     // });
 
+}
+
+export const addDataToAPI = (data) => (dispatch) => {
+    push(ref(db, 'notes/' + data.userId), {
+        title: data.title,
+        date: data.date,
+        content: data.content
+    })
 }
