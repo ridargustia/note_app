@@ -1,7 +1,7 @@
 // import "../../../config/firebase";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { database } from "../../../config/firebase";
-import { getDatabase, ref, set, push } from "firebase/database";
+import { getDatabase, ref, set, push, onValue } from "firebase/database";
 const auth = getAuth();
 const db = getDatabase();
 
@@ -72,4 +72,26 @@ export const addDataToAPI = (data) => (dispatch) => {
         date: data.date,
         content: data.content
     })
+}
+
+export const getDataFromAPI = (userId) => (dispatch) => {
+    const urlNotes = ref(db, 'notes/' + userId);
+    return new Promise((resolve, reject) => {
+        onValue(urlNotes, (snapshot) => {
+            // const data = snapshot.val();
+            // updateStarCount(postElement, data);
+            // console.log('Get Data: ', snapshot.val());
+
+            //TODO Mengubah objek menjadi array
+            const data = [];
+            Object.keys(snapshot.val()).map(key => {
+                data.push({
+                    id: key,
+                    data: snapshot.val()[key]
+                })
+            });
+            dispatch({type: 'SET_NOTES', value: data});
+            resolve(snapshot.val());
+        });
+    });
 }

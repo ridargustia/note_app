@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { addDataToAPI } from "../../../config/redux/action";
+import { addDataToAPI, getDataFromAPI } from "../../../config/redux/action";
 import './Dashboard.scss';
 
 class Dashboard extends Component{
@@ -8,6 +8,13 @@ class Dashboard extends Component{
         title: '',
         date: '',
         content: ''
+    }
+
+    componentDidMount() {
+    //     const userData = localStorage.getItem('userData');
+    //     const user = JSON.parse(userData);
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        this.props.getNotes(userData.uid);
     }
 
     onChangeInput = (data) => {
@@ -19,12 +26,14 @@ class Dashboard extends Component{
     handleSaveNote = () => {
         const {title, content} = this.state;
         const {saveNote} = this.props;
+        const userData = JSON.parse(localStorage.getItem('userData'));
 
         const data = {
             title: title,
             date: new Date().getTime(),
             content: content,
-            userId: this.props.userData.uid
+            userId: userData.uid
+            // userId: this.props.userData.uid
         }
         // console.log(data);
         saveNote(data);
@@ -32,6 +41,8 @@ class Dashboard extends Component{
 
     render(){
         const {title, date, content} = this.state;
+        const { notes } = this.props;
+        console.log('Notes: ', notes);
         return(
             <div className="container">
                 <div className="input-form">
@@ -40,11 +51,23 @@ class Dashboard extends Component{
                     <button onClick={this.handleSaveNote} className="save-button">Simpan</button>
                 </div>
                 <hr />
-                <div className="card-content">
-                    <p className="title">Title</p>
-                    <p className="date">14 Nov 2022</p>
-                    <p className="content">Contents Notes</p>
-                </div>
+                {
+                    notes.length > 0 ? (
+                        <Fragment>
+                            {
+                                notes.map(note => {
+                                    return (
+                                        <div className="card-content" key={note.id}>
+                                            <p className="title">{note.data.title}</p>
+                                            <p className="date">{note.data.date}</p>
+                                            <p className="content">{note.data.content}</p>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </Fragment>
+                    ) : null
+                }
             </div>
         )
     }
@@ -52,13 +75,15 @@ class Dashboard extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        userData: state.user
+        userData: state.user,
+        notes: state.notes
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        saveNote: (data) => dispatch(addDataToAPI(data))
+        saveNote: (data) => dispatch(addDataToAPI(data)),
+        getNotes: (data) => dispatch(getDataFromAPI(data))
     }
 }
 

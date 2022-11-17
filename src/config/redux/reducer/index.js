@@ -3,7 +3,8 @@ const initState = {
     isLogin: false,
     isLoading: false,
     // user: 'Ridar Gustia'
-    user: {}
+    user: {},
+    notes: []
 }
 
 const reducer = (state=initState, action) => {
@@ -35,6 +36,14 @@ const reducer = (state=initState, action) => {
             isLoading: action.value
         }
     }
+    if (action.type === 'SET_NOTES') {
+        // console.log('Reducer loading');
+        return {
+            ...state,
+            notes: action.value
+        }
+    }
+
     return state;
 }
 

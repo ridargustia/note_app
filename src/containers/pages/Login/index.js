@@ -29,6 +29,7 @@ const Login = () => {
         if (isLogin) {
             // console.log('Status login : ', isLogin);
             // console.log('Status loading : ', isLoading);
+            localStorage.setItem('userData', JSON.stringify(user));
             navigate('/');
         }
     });
