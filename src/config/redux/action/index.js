@@ -85,13 +85,32 @@ export const getDataFromAPI = (userId) => (dispatch) => {
             //TODO Mengubah objek menjadi array
             const data = [];
             Object.keys(snapshot.val()).map(key => {
+                // console.log(key);
                 data.push({
                     id: key,
                     data: snapshot.val()[key]
                 })
             });
             dispatch({type: 'SET_NOTES', value: data});
-            resolve(snapshot.val());
+            // resolve(snapshot.val());
         });
+    });
+}
+
+export const updateDataAPI = (data) => (dispatch) => {
+    return new Promise((resolve, reject) => {
+        set(ref(db, `notes/${data.userId}/${data.noteId}`), {
+            title: data.title,
+            date: data.date,
+            content: data.content
+          })
+          .then(() => {
+            // Data saved successfully!
+            resolve(true);
+          })
+          .catch((error) => {
+            // The write failed...
+            reject(false);
+          });
     });
 }
