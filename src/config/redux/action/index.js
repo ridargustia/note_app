@@ -1,7 +1,7 @@
 // import "../../../config/firebase";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { database } from "../../../config/firebase";
-import { getDatabase, ref, set, push, onValue } from "firebase/database";
+import { getDatabase, ref, set, push, onValue, remove } from "firebase/database";
 const auth = getAuth();
 const db = getDatabase();
 
@@ -104,6 +104,20 @@ export const updateDataAPI = (data) => (dispatch) => {
             date: data.date,
             content: data.content
           })
+          .then(() => {
+            // Data saved successfully!
+            resolve(true);
+          })
+          .catch((error) => {
+            // The write failed...
+            reject(false);
+          });
+    });
+}
+
+export const deleteDataAPI = (data) => (dispatch) => {
+    return new Promise((resolve, reject) => {
+        remove(ref(db, `notes/${data.userId}/${data.noteId}`))
           .then(() => {
             // Data saved successfully!
             resolve(true);

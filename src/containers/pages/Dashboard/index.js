@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { addDataToAPI, getDataFromAPI, updateDataAPI } from "../../../config/redux/action";
+import { addDataToAPI, deleteDataAPI, getDataFromAPI, updateDataAPI } from "../../../config/redux/action";
 import './Dashboard.scss';
 
 class Dashboard extends Component{
@@ -64,6 +64,17 @@ class Dashboard extends Component{
         })
     }
 
+    deleteNote = (e, note) => {
+        e.stopPropagation();    //Agar ketika klik child-nya, parent-nya tidak ikut ke-klik
+        const {deleteNote} = this.props;
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        const data = {
+            userId: userData.uid,
+            noteId: note.id,
+        }
+        deleteNote(data);
+    }
+
     render(){
         const {title, date, content, textButton} = this.state;
         const { notes } = this.props;
@@ -94,6 +105,7 @@ class Dashboard extends Component{
                                             <p className="title">{note.data.title}</p>
                                             <p className="date">{note.data.date}</p>
                                             <p className="content">{note.data.content}</p>
+                                            <div className="delete-btn" onClick={(e) => this.deleteNote(e, note)}>x</div>
                                         </div>
                                     )
                                 })
@@ -117,7 +129,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         saveNote: (data) => dispatch(addDataToAPI(data)),
         getNotes: (data) => dispatch(getDataFromAPI(data)),
-        updateNote: (data) => dispatch(updateDataAPI(data))
+        updateNote: (data) => dispatch(updateDataAPI(data)),
+        deleteNote: (data) => dispatch(deleteDataAPI(data))
     }
 }
 
